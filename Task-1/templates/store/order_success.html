@@ -1,0 +1,11 @@
+{% extends 'store/base.html' %}
+{% block title %}Order Confirmed{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Thank you for your order!</h1>
+    <p>Your order number is #{{ order.pk }}.</p>
+    <p>Total: Rs. {{ order.total_amount }}</p>
+    <p>Status: {{ order.status }}</p>
+    <a class="btn" href="{% url 'home' %}">Continue Shopping</a>
+</div>
+{% endblock %}

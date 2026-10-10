@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+
+{% for product, quantity in items %}
+<p>{{ product.name }} × {{ quantity }} — Rs. {{ product.price }}</p>
+{% endfor %}
+
+<h2>Total: Rs. {{ total }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Full Name</label>
+    <input name="full_name" maxlength="150" required>
+
+    <label>Delivery Address</label>
+    <textarea name="address" required></textarea>
+
+    <label>Phone Number</label>
+    <input name="phone" maxlength="30" required>
+
+    <button type="submit">Place Order</button>
+</form>
+{% endblock %}

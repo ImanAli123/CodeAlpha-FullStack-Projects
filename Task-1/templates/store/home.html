@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}ShopEase | Home{% endblock %}
+
+{% block content %}
+<h1>Discover Our Products</h1>
+<p>Find your everyday essentials in one place.</p>
+
+{% static 'images/' as image_base %}
+
+<div class="products">
+    {% for product in products %}
+    <div class="card">
+
+        {% if product.image_file %}
+        <img src="{{ image_base }}{{ product.image_file }}"
+             alt="{{ product.name }}"
+             style="width: 200px; height: 200px; object-fit: contain;">
+        {% elif product.image_url %}
+        <img src="{{ product.image_url }}"
+             alt="{{ product.name }}"
+             style="width: 200px; height: 200px; object-fit: contain;">
+        {% else %}
+        <p>Image not added yet</p>
+        {% endif %}
+
+        <h3>{{ product.name }}</h3>
+        <p class="price">Rs. {{ product.price }}</p>
+
+        <a class="btn" href="{% url 'product_detail' product.pk %}">
+            View Details
+        </a>
+    </div>
+    {% empty %}
+    <p>No products yet. Add products through the admin panel.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.name }} | ShopEase{% endblock %}
+{% block content %}
+<div class="card">
+    {% if product.image_url %}
+    <img src="{{ product.image_url }}" alt="{{ product.name }}"
+         style="max-width:350px">
+    {% endif %}
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <p class="price">Rs. {{ product.price }}</p>
+    <p>Available stock: {{ product.stock }}</p>
+
+    {% if product.stock > 0 %}
+    <form method="post" action="{% url 'add_to_cart' product.pk %}">
+        {% csrf_token %}
+        <button type="submit">Add to Cart</button>
+    </form>
+    {% else %}
+    <p>Out of stock</p>
+    {% endif %}
+</div>
+{% endblock %}
