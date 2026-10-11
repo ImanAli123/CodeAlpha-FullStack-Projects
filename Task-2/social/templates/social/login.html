@@ -1,0 +1,20 @@
+{% extends 'social/base.html' %}
+{% block title %}Login | ConnectHub{% endblock %}
+{% block content %}
+<section class="auth-card">
+    <h1>Welcome Back!</h1>
+    <p>Login to see what's happening.</p>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+        <p class="error">Invalid username or password.</p>
+        {% endif %}
+        {{ form.as_p }}
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+        <button class="btn" type="submit">Login</button>
+    </form>
+    <p>New here? <a href="{% url 'register' %}">Create an account</a></p>
+</section>
+{% endblock %}

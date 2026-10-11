@@ -1,0 +1,90 @@
+{% extends 'social/base.html' %}
+{% block title %}@{{ person.username }} | ConnectHub{% endblock %}
+{% block content %}
+<section class="card profile-card">
+    <div class="profile-avatar">
+        {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Profile picture">
+        {% else %}
+        {{ person.username|first|upper }}
+        {% endif %}
+    </div>
+
+    <h1>@{{ person.username }}</h1>
+    <p>{{ profile.bio|default:"This user hasn't added a bio yet." }}</p>
+
+    <div class="stats">
+        <div><strong>{{ posts.count }}</strong><span>Posts</span></div>
+        <div><strong>{{ followers_count }}</strong><span>Followers</span></div>
+        <div><strong>{{ following_count }}</strong><span>Following</span></div>
+    </div>
+
+    {% if person == user %}
+    <form method="post" enctype="multipart/form-data" class="profile-edit">
+        {% csrf_token %}
+        <h2>Edit Your Profile</h2>
+        {{ form.as_p }}
+        <button class="btn" type="submit">Save Profile</button>
+    </form>
+    {% else %}
+    <form method="post" action="{% url 'follow' person.username %}">
+        {% csrf_token %}
+        <button class="btn" type="submit">
+            {% if is_following %}Unfollow{% else %}Follow{% endif %}
+        </button>
+    </form>
+    {% endif %}
+</section>
+
+<h2 class="section-heading">Posts by @{{ person.username }}</h2>
+<section class="feed-list">
+    {% for post in posts %}
+    <article class="card post-card">
+        <p class="muted">{{ post.created_at|date:"M d, Y · H:i" }}</p>
+        <p class="post-content">{{ post.content }}</p>
+
+        <div class="post-actions">
+            <form method="post" action="{% url 'like' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button class="action-btn" type="submit">
+                    {% if post.is_liked %}♥ Unlike{% else %}♡ Like{% endif %}
+                    ({{ post.likes.count }})
+                </button>
+            </form>
+            {% if post.author == user %}
+            <form method="post" action="{% url 'delete_post' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button class="action-btn danger" type="submit">Delete</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="comments">
+            <h3>Comments ({{ post.comments.count }})</h3>
+            {% for comment in post.comments.all %}
+            <p class="comment">
+                <strong>@{{ comment.author.username }}</strong>
+                {{ comment.content }}
+            </p>
+            {% empty %}
+            <p class="muted">No comments yet.</p>
+            {% endfor %}
+
+            <form class="comment-form" method="post"
+                  action="{% url 'comment' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="text" name="content"
+                       placeholder="Write a comment..."
+                       maxlength="500" required>
+                <button class="btn" type="submit">Comment</button>
+            </form>
+        </div>
+    </article>
+    {% empty %}
+    <div class="card empty-state">No posts to display yet.</div>
+    {% endfor %}
+</section>
+{% endblock %}
