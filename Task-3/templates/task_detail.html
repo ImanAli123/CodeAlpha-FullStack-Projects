@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} | TaskFlow{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <h1>{{ task.title }}</h1>
+    <p>{{ task.description|default:"No description." }}</p>
+
+    <p><strong>Status:</strong> {{ task.get_status_display }}</p>
+    <p><strong>Priority:</strong> {{ task.get_priority_display }}</p>
+    <p>
+        <strong>Assigned to:</strong>
+        {{ task.assigned_to.username|default:"Unassigned" }}
+    </p>
+    <p><strong>Deadline:</strong> {{ task.due_date|default:"Not set" }}</p>
+
+    <a class="btn" href="{% url 'update_task' task.pk %}">Edit Task</a>
+    <a class="btn secondary"
+       href="{% url 'project_detail' task.project.pk %}">Back to Board</a>
+</div>
+
+<div class="panel">
+    <h2>Comments & Discussion</h2>
+
+    {% for comment in task.comments.all %}
+    <div class="card">
+        <strong>{{ comment.author.username }}</strong>
+        <p>{{ comment.content|linebreaksbr }}</p>
+        <span class="muted">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+    </div>
+    {% empty %}
+    <p class="muted">No comments yet. Start the discussion.</p>
+    {% endfor %}
+
+    <h3>Add a comment</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Post Comment</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}New Project | TaskFlow{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:700px;margin:auto">
+    <h1>Create a Project</h1>
+    <p class="muted">Choose a name, description and team members.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Create Project</button>
+        <a class="btn secondary" href="{% url 'dashboard' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

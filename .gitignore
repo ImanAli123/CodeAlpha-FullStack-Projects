@@ -1,16 +1,18 @@
+
+# Python
 __pycache__/
 *.py[cod]
 venv/
 .venv/
 env/
+
+# Environment and editor files
 .env
 .env.*
 .vscode/
-.DS_Store
-Thumbs.db
-*.log
-
 .vs/
 
+# Local Django databases
 Task-1/db.sqlite3
-
+Task-2/db.sqlite3
+Task-3/db.sqlite3

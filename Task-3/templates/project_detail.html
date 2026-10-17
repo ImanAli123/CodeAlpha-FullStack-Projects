@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} | TaskFlow{% endblock %}
+{% block content %}
+
+<div class="topline">
+    <div>
+        <h1>{{ project.name }}</h1>
+        <p>{{ project.description }}</p>
+        <p class="muted">
+            Team:
+            {% for member in project.members.all %}
+            {{ member.username }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+            No members
+            {% endfor %}
+        </p>
+    </div>
+    <a class="btn" href="{% url 'create_task' project.pk %}">+ Add Task</a>
+</div>
+
+<div class="panel">
+    <h3>Invite an existing user</h3>
+    {% if project.creator == user %}
+    <form method="post" action="{% url 'add_member' project.pk %}">
+        {% csrf_token %}
+        <label for="username">Username</label>
+        <input id="username" name="username" required
+               placeholder="Enter registered username">
+        <button class="btn" type="submit">Add Member</button>
+    </form>
+    {% else %}
+    <p class="muted">Only the project creator can add members.</p>
+    {% endif %}
+</div>
+
+<div class="board">
+    <section class="column">
+        <h2>To Do ({{ todo_tasks.count }})</h2>
+        {% for task in todo_tasks %}
+        {% include "task_card.html" with task=task %}
+        {% empty %}
+        <p class="muted">No tasks yet.</p>
+        {% endfor %}
+    </section>
+
+    <section class="column">
+        <h2>In Progress ({{ progress_tasks.count }})</h2>
+        {% for task in progress_tasks %}
+        {% include "task_card.html" with task=task %}
+        {% empty %}
+        <p class="muted">No tasks yet.</p>
+        {% endfor %}
+    </section>
+
+    <section class="column">
+        <h2>Completed ({{ done_tasks.count }})</h2>
+        {% for task in done_tasks %}
+        {% include "task_card.html" with task=task %}
+        {% empty %}
+        <p class="muted">No tasks yet.</p>
+        {% endfor %}
+    </section>
+</div>
+
+{% if project.creator == user %}
+<div class="panel" style="margin-top:20px">
+    <h3>Project settings</h3>
+    <form method="post" action="{% url 'delete_project' project.pk %}"
+          onsubmit="return confirm('Delete this project and all its tasks?')">
+        {% csrf_token %}
+        <button class="btn danger" type="submit">Delete Project</button>
+    </form>
+</div>
+{% endif %}
+
+<p><a href="{% url 'dashboard' %}">← Back to Dashboard</a></p>
+{% endblock %}

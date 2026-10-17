@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Register | TaskFlow{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:520px;margin:auto">
+    <h1>Create account</h1>
+    <p class="muted">Join TaskFlow to manage your projects.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Register</button>
+    </form>
+    <p>Already registered? <a href="{% url 'login' %}">Login</a></p>
+</div>
+{% endblock %}
