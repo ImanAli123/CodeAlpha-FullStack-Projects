@@ -12,6 +12,12 @@ A multi-user video conferencing app with screen sharing, file sharing, a shared 
 - **User authentication** with bcrypt password hashing and JWT sessions
 - Mute and camera toggles, color picker, clear board
 
+## Screenshots
+
+![Video call](screenshots/video-call.png)
+![Whiteboard](screenshots/whiteboard.png)
+![File sharing](screenshots/file-sharing.png)
+
 ## Tech Stack
 
 | Layer | Technology |
